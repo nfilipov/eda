@@ -5,7 +5,9 @@
 #dict_2024_leg_t2_candidats
 #dict_2019_2024_participation
 #dict_2019_2024_results 
+#dict_votes # le dict temporaire pour les election europeennes 2019
 
+'''
 dict_2024_leg_t1_results = {'Code département': dtype('int64'),
  'Libellé département': dtype('O'),
  'Code commune': dtype('int64'),
@@ -335,3 +337,16 @@ dict_2019_2024_results = {'id_election': dtype('O'),
  'Nuance': dtype('O'),
  'Binôme': dtype('O'),
  'Liste': dtype('O')}
+
+
+'''
+
+dict_listes_2019 = {
+    'Libellé de la commune' : 'first',
+    'Inscrits' : 'first',
+    'Abstentions': 'first', 
+    'Nuls' : 'first' , 
+    'Abstentions' : 'first',
+    'Exprimés': 'first', 
+    'Voix' : 'sum',
+    }
