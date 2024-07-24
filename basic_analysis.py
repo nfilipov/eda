@@ -14,13 +14,29 @@ basic_dict_part = {
     'Voix' : 'sum'
     }
 
-def make_grouped_datasets(df1):
-    grouped_1 = df1.groupby('Code du b.vote_df1').agg(basic_dict_part).reset_index()
-    #grouped_2 = df2.groupby('Code du b.vote_df1').agg(dict_part).reset_index()
+def make_grouped_datasets(df1,key:None,dict:None ):
+    # this function groups and aggregates results based on a given key and an agg dictionary.
+    # use case : participation to euro elections
+    # BV, Liste, Inscrits, Voix
+    # 1 , List1, 30, 14
+    # 1 , List2, 30, 12
+    # 2 , List1, 21, 4
+    # 2 , List2, 21, 12
+    # this function can be applied as make_grouped_datasets(df, BV, dict={'Inscrits':'first','Voix':'sum'})
+    # and will return the following 'grouped' dataset:
+    # grouped  = DataFrame (
+    #   'BV' : 1, 2
+    #   'Inscrits' : 30, 21
+    #   'Voix' : 26, 16
+    # )
+    if key == None:
+        key='Code du b.vote_df1'
+    if dict == None:
+        dict = basic_dict_part
+    grouped_1 = df1.groupby(key).agg(dict).reset_index()
     return grouped_1
 
 def summarize_participation_any(df):
-    participation_ = (df['Inscrits'] - df['Abstentions'])/ df['Inscrits']
     Inscrits_ville = df['Inscrits'].sum()
     Abstentions_ville = df['Abstentions'].sum()
     Participation_ville = (Inscrits_ville-Abstentions_ville)/Inscrits_ville
@@ -29,8 +45,23 @@ def summarize_participation_any(df):
     return s
 
 
-grouped_2019 = make_grouped_datasets(df_2019.copy())
-grouped_2024_e = make_grouped_datasets(df_2024_e.copy())
+#grouped_2019 = make_grouped_datasets(df_2019.copy(), 'Code du b.vote_df1',basic_dict_part)
+#grouped_2024_e = make_grouped_datasets(df_2024_e.copy(), 'Code du b.vote_df1',basic_dict_part)
 
-print(" Élections européennes 2019 Vernon:\n",summarize_participation_any(grouped_2019.copy()))
-print(" Élections européennes 2024 Vernon:\n",summarize_participation_any(grouped_2024_e.copy()))
+#print(" Élections européennes 2019 Vernon:\n",summarize_participation_any(grouped_2019.copy()))
+#print(" Élections européennes 2024 Vernon:\n",summarize_participation_any(grouped_2024_e.copy()))
+
+def merge_df(df1,df2,suffix1, suffix2,title=None):
+    if title == None:
+        title='_tmp'
+
+    df = pd.merge(
+        df1, df2,
+        on=["Code du b.vote_df1"],
+        suffixes=[suffix1, suffix2]
+    )
+    return df
+
+#europeennes_part = merge_df(grouped_2019.copy(),grouped_2024_e.copy(),"_2019","_2024",'europeennes_part_vernon')
+
+
